@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Techno PONIN - Séquences 5ème</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Styles personnalisés pour la police Inter et le thème ensoleillé/réunionnais */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fffbe7; /* Jaune très clair, crème */
+            color: #4a3a00; /* Marron foncé pour la lisibilité sur fond clair */
+        }
+        .btn-primary {
+            background-color: #fcd34d; /* Jaune vif et chaleureux */
+            color: #4a3a00; /* Texte marron foncé pour les boutons */
+        }
+        .btn-primary:hover {
+            background-color: #fbbf24; /* Jaune légèrement plus foncé au survol */
+        }
+        /* Ajustements pour les couleurs de texte des titres et liens de navigation */
+        .text-d97706 { /* Orange/doré pour les titres, évoquant le soleil */
+            color: #d97706;
+        }
+        .text-fcd34d { /* Jaune vif au survol des liens */
+            color: #fcd34d;
+        }
+        header {
+            background-color: #fef9c3; /* Jaune clair pour l'en-tête */
+            border-bottom: 2px solid #fcd34d; /* Bordure jaune pour l'en-tête */
+        }
+        footer {
+            background-color: #fefce8; /* Jaune très clair pour le pied de page */
+            border-top: 2px solid #fcd34d; /* Bordure jaune pour le pied de page */
+        }
+
+        /* Styles spécifiques aux séquences */
+        .sequence-section-title {
+            color: #d97706; /* Couleur des titres de séquence */
+        }
+        .sequence-item {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            padding: 1.5rem; /* Ajout de padding pour le contenu */
+            margin-bottom: 2rem; /* Espace entre les séquences */
+        }
+        .sequence-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+        }
+        .sequence-item a {
+            color: #4a3a00; /* Couleur du texte des liens de séance */
+            text-decoration: underline;
+        }
+        .sequence-item a:hover {
+            color: #d97706; /* Couleur de survol des liens de séance */
+        }
+        .sequence-image-container {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .sequence-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* Styles pour la fenêtre modale (inchangés) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            color: #4a3a00; /* Texte marron foncé pour le contenu de la modale */
+        }
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #d97706;
+        }
+        .modal-close-btn:hover {
+            color: #fcd34d;
+        }
+        .software-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #fcd34d;
+        }
+        .software-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        /* Styles pour les menus déroulants */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #ffffff;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            top: 100%; /* Positionne le menu sous le bouton */
+            left: 0;
+        }
+        .dropdown-content a {
+            color: #4a3a00;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+        .dropdown-content a:hover {
+            background-color: #fef9c3; /* Jaune clair au survol */
+            color: #d97706; /* Orange/doré au survol */
+        }
+        .dropdown.active .dropdown-content {
+            display: block;
+        }
+        .dropdown-arrow {
+            margin-left: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+        .dropdown.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <header class="py-4 shadow-lg">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center px-4">
+            <h1 class="text-3xl font-bold text-d97706 mb-4 md:mb-0">Techno PONIN</h1>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="index.html" class="text-d97706 hover:text-fcd34d transition duration-300">Accueil</a></li>
+                    
+                    <li class="dropdown" id="dropdown-5eme">
+                        <a href="5eme.html" class="text-d97706 hover:text-fcd34d transition duration-300 inline-flex items-center">
+                            5ème <span class="dropdown-arrow">▼</span>
+                        </a>
+                        <div class="dropdown-content">
+                            <a href="5eme.html#sequence-1">Séquence 1</a>
+                            <a href="5eme.html#sequence-2">Séquence 2</a>
+                            <a href="5eme.html#sequence-3">Séquence 3</a>
+                            <a href="5eme.html#sequence-4">Séquence 4</a>
+                            <a href="5eme.html#sequence-5">Séquence 5</a>
+                            <a href="5eme.html#sequence-6">Séquence 6</a>
+                            <a href="5eme.html#sequence-7">Séquence 7</a>
+                            <a href="5eme.html#sequence-8">Séquence 8</a>
+                            <a href="5eme.html#sequence-9">Séquence 9</a>
+                            <a href="5eme.html#sequence-10">Séquence 10</a>
+                        </div>
+                    </li>
+
+                    <li class="dropdown" id="dropdown-4eme">
+                        <a href="4eme.html" class="text-d97706 hover:text-fcd34d transition duration-300 inline-flex items-center">
+                            4ème <span class="dropdown-arrow">▼</span>
+                        </a>
+                        <div class="dropdown-content">
+                            <a href="4eme.html#sequence-1">Séquence 1</a>
+                            <a href="4eme.html#sequence-2">Séquence 2</a>
+                            <a href="4eme.html#sequence-3">Séquence 3</a>
+                            <a href="4eme.html#sequence-4">Séquence 4</a>
+                            <a href="4eme.html#sequence-5">Séquence 5</a>
+                            <a href="4eme.html#sequence-6">Séquence 6</a>
+                            <a href="4eme.html#sequence-7">Séquence 7</a>
+                            <a href="4eme.html#sequence-8">Séquence 8</a>
+                            <a href="4eme.html#sequence-9">Séquence 9</a>
+                            <a href="4eme.html#sequence-10">Séquence 10</a>
+                        </div>
+                    </li>
+
+                    <li class="dropdown" id="dropdown-3eme">
+                        <a href="3eme.html" class="text-d97706 hover:text-fcd34d transition duration-300 inline-flex items-center">
+                            3ème <span class="dropdown-arrow">▼</span>
+                        </a>
+                        <div class="dropdown-content">
+                            <a href="3eme.html#sequence-1">Séquence 1</a>
+                            <a href="3eme.html#sequence-2">Séquence 2</a>
+                            <a href="3eme.html#sequence-3">Séquence 3</a>
+                            <a href="3eme.html#sequence-4">Séquence 4</a>
+                            <a href="3eme.html#sequence-5">Séquence 5</a>
+                            <a href="3eme.html#sequence-6">Séquence 6</a>
+                            <a href="3eme.html#sequence-7">Séquence 7</a>
+                            <a href="3eme.html#sequence-8">Séquence 8</a>
+                            <a href="3eme.html#sequence-9">Séquence 9</a>
+                            <a href="3eme.html#sequence-10">Séquence 10</a>
+                        </div>
+                    </li>
+
+                    <li><a href="index.html#ressources" class="text-d97706 hover:text-fcd34d transition duration-300">Ressources</a></li>
+                    <li><a href="index.html#contact" class="text-d97706 hover:text-fcd34d transition duration-300">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="py-16 bg-fefce8">
+        <div class="container mx-auto px-4">
+            <h2 class="text-5xl font-bold text-d97706 text-center mb-12">Classe de 5ème</h2>
+
+            <div class="bg-white rounded-lg shadow-xl p-6 mb-8 flex flex-col md:flex-row items-center gap-6">
+                <div class="md:w-1/3 flex justify-center">
+                    <img src="https://placehold.co/200x200/fcd34d/d97706?text=Mascotte" alt="Mascotte Techno PONIN" class="rounded-full w-48 h-48 object-cover">
+                </div>
+                <div class="md:w-2/3 text-center md:text-left">
+                    <h3 class="text-3xl font-bold text-d97706 mb-4">Présentation de la Technologie Collège</h3>
+                    <p class="text-gray-700 mb-4">
+                        Bienvenue en classe de 5ème ! La technologie au collège vous invite à découvrir le monde des objets techniques, de leur conception à leur impact sur notre environnement. Nous explorerons comment fonctionnent les systèmes qui nous entourent et comment nous pouvons les comprendre et les améliorer.
+                    </p>
+                    <p class="text-gray-700">
+                        Cette année sera riche en découvertes, en manipulations et en projets concrets pour développer votre curiosité et votre esprit critique face aux défis technologiques.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-xl p-6 mb-12">
+                <h3 class="text-3xl font-bold text-d97706 mb-4 text-center">Compétences Visées</h3>
+                <ul class="list-disc list-inside text-gray-700 space-y-2">
+                    <li>**Analyser** le fonctionnement et la structure d'un objet technique.</li>
+                    <li>**Modéliser** et simuler le comportement d'un objet technique.</li>
+                    <li>**Concevoir** et réaliser tout ou partie d'un objet technique.</li>
+                    <li>**Communiquer** sur des choix de conception et de fabrication.</li>
+                    <li>**Identifier** l'impact des objets techniques sur l'environnement et la société.</li>
+                    <li>**Utiliser** des outils numériques pour la conception et la simulation.</li>
+                </ul>
+            </div>
+
+            <h3 class="text-4xl font-bold text-d97706 text-center mb-12">Nos Séquences de Technologie</h3>
+
+            <div class="space-y-8">
+                <div class="sequence-item" id="sequence-1">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="md:w-1/3">
+                            <div class="sequence-image-container">
+                                <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image de stockage de données">
+                            </div>
+                            <p class="text-gray-700 text-sm text-center">
+                                *Visuel de la séquence 1*
+                            </p>
+                        </div>
+                        <div class="md:w-2/3">
+                            <h4 class="text-2xl font-bold sequence-section-title mb-4">Séquence 1 : Comment stocker et transférer les données du collège ?</h4>
+                            <ul class="list-disc list-inside text-gray-700 space-y-2">
+                                <li><a href="#" class="hover:text-fcd34d">Séance 1 : Quels sont les différents types de fichier ?</a></li>
+                                <li><a href="#" class="hover:text-fcd34d">Séance 2 : Quelle est la taille des fichiers ?</a></li>
+                                <li><a href="#" class="hover:text-fcd34d">Séance 3 : Comment stocker les données ?</a></li>
+                                <li><a href="#" class="hover:text-fcd34d font-bold">Synthèse</a></li>
+                            </ul>
+                            <a href="#" class="mt-4 inline-block btn-primary px-4 py-2 rounded-full text-sm font-semibold">
+                                Télécharger la fiche d'activités (PDF)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sequence-item" id="sequence-2">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="md:w-1/3">
+                            <div class="sequence-image-container">
+                                <img src="https://images.unsplash.com/photo-1587440871875-191322ee64b0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image de réseau informatique">
+                            </div>
+                            <p class="text-gray-700 text-sm text-center">
+                                *Visuel de la séquence 2*
+                            </p>
+                        </div>
+                        <div class="md:w-2/3">
+                            <h4 class="text-2xl font-bold sequence-section-title mb-4">Séquence 2 : Comment communiquer, stocker et échanger des informations numériques au sein d'un réseau ?</h4>
+                            <ul class="list-disc list-inside text-gray-700 space-y-2">
+                                <li><a href="#" class="hover:text-fcd34d">Séance 1 : Environnement informatique : Le poste client</a></li>
+                                <li><a href="#" class="hover:text-fcd34d">Séance 2 : Les réseaux informatiques</a></li>
+                                <li><a href="#" class="hover:text-fcd34d">Séance 3 : Comment les équipements échangent-ils des informations ?</a></li>
+                                <li><a href="#" class="hover:text-fcd34d font-bold">Synthèse</a></li>
+                            </ul>
+                            <a href="#" class="mt-4 inline-block btn-primary px-4 py-2 rounded-full text-sm font-semibold">
+                                Télécharger la fiche d'activités (PDF)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sequence-item" id="sequence-3">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="md:w-1/3">
+                            <div class="sequence-image-container">
+                                <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image de programmation de robot">
+                            </div>
+                            <p class="text-gray-700 text-sm text-center">
+                                *Visuel de la séquence 3*
+                            </p>
+                        </div>
+                        <div class="md:w-2/3">
+                            <h4 class="text-2xl font-bold sequence-section-title mb-4">Séquence 3 : Programmer un feu arrière "intelligent" de vélo</h4>
+                            <ul class="list-disc list-inside text-gray-700 space-y-2">
+                                <li><a href="#" class="hover:text-fcd34d">Séance 1 : Introduction à la programmation par blocs</a></li>
+                                <li><a href="#" class="hover:text-fcd34d">Séance 2 : Utilisation des capteurs (lumière, mouvement)</a></li>
+                                <li><a href="#" class="hover:text-fcd34d">Séance 3 : Création du programme du feu intelligent</a></li>
+                                <li><a href="#" class="hover:text-fcd34d font-bold">Synthèse</a></li>
+                            </ul>
+                            <a href="#" class="mt-4 inline-block btn-primary px-4 py-2 rounded-full text-sm font-semibold">
+                                Télécharger la fiche d'activités (PDF)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sequence-item" id="sequence-4">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="md:w-1/3">
+                            <div class="sequence-image-container">
+                                <img src="https://images.unsplash.com/photo-1518770660439-46f797f22b10?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image pour Séquence 4">
+                            </div>
+                            <p class="text-gray-700 text-sm text-center">
+                                *Visuel de la séquence 4*
+                            </p>
+                        </div>
+                        <div class="md:w-2/3">
+                            <h4 class="text-2xl font-bold sequence-section-title mb-4">Séquence 4 : Titre de la Séquence 4</h4>
+                            <ul class="list-disc list-inside text-gray-700 space-y-2">
+                                <li><a href="#" class="hover:text-fcd34d">Séance 1 : Sous-thème 1</a></li>
+                                <li><a href="#" class="hover:text-fcd34d">Séance 2 : Sous-thème 2</a></li>
+                                <li><a href="#" class="hover:text-fcd34d font-bold">Synthèse</a></li>
+                            </ul>
+                            <a href="#" class="mt-4 inline-block btn-primary px-4 py-2 rounded-full text-sm font-semibold">
+                                Télécharger la fiche d'activités (PDF)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sequence-item" id="sequence-5">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="md:w-1/3">
+                            <div class="sequence-image-container">
+                                <img src="https://images.unsplash.com/photo-1587440871875-191322ee64b0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image pour Séquence 5">
+                            </div>
+                            <p class="text-gray-700 text-sm text-center">
+                                *Visuel de la séquence 5*
+                            </p>
+                        </div>
+                        <div class="md:w-2/3">
+                            <h4 class="text-2xl font-bold sequence-section-title mb-4">Séquence 5 : Titre de la Séquence 5</h4>
+                            <ul class="list-disc list-inside text-gray-700 space-y-2">
+                                <li><a href="#" class="hover:text-fcd34d">Séance 1 : Sous-thème 1</a></li>
+                                <li><a href="#" class="hover:text-fcd34d">Séance 2 : Sous-thème 2</a></li>
+                                <li><a href="#" class="hover:text-fcd34d font-bold">Synthèse</a></li>
+                            </ul>
+                            <a href="#" class="mt-4 inline-block btn-primary px-4 py-2 rounded-full text-sm font-semibold">
+                                Télécharger la fiche d'activités (PDF)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sequence-item" id="sequence-6">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="md:w-1/3">
+                            <div class="sequence-image-container">
+                                <img src="https://images.unsplash.com/photo-1517030310246-9d584310508a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image pour Séquence 6">
+                            </div>
+                            <p class="text-gray-700 text-sm text-center">
+                                *Visuel de la séquence 6*
+                            </p>
+                        </div>
+                        <div class="md:w-2/3">
+                            <h4 class="text-2xl font-bold sequence-section-title mb-4">Séquence 6 : Titre de la Séquence 6</h4>
+                            <ul class="list-disc list-inside text-gray-700 space-y-2">
+                                <li><a href="#" class="hover:text-fcd34d">Séance 1 : Sous-thème 1</a></li>
+                                <li><a href="#" class="hover:text-fcd34d">Séance 2 : Sous-thème 2</a></li>
+                                <li><a href="#" class="hover:text-fcd34d font-bold">Synthèse</a></li>
+                            </ul>
+                            <a href="#" class="mt-4 inline-block btn-primary px-4 py-2 rounded-full text-sm font-semibold">
+                                Télécharger la fiche d'activités (PDF)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sequence-item" id="sequence-7">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="md:w-1/3">
+                            <div class="sequence-image-container">
+                                <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image pour Séquence 7">
+                            </div>
+                            <p class="text-gray-700 text-sm text-center">
+                                *Visuel de la séquence 7*
+                            </p>
+                        </div>
+                        <div class="md:w-2/3">
+                            <h4 class="text-2xl font-bold sequence-section-title mb-4">Séquence 7 : Titre de la Séquence 7</h4>
+                            <ul class="list-disc list-inside text-gray-700 space-y-2">
+                                <li><a href="#" class="hover:text-fcd34d">Séance 1 : Sous-thème 1</a></li>
+                                <li><a href="#" class="hover:text-fcd34d">Séance 2 : Sous-thème 2</a></li>
+                                <li><a href="#" class="hover:text-fcd34d font-bold">Synthèse</a></li>
+                            </ul>
+                            <a href="#" class="mt-4 inline-block btn-primary px-4 py-2 rounded-full text-sm font-semibold">
+                                Télécharger la fiche d'activités (PDF)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sequence-item" id="sequence-8">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="md:w-1/3">
+                            <div class="sequence-image-container">
+                                <img src="https://images.unsplash.com/photo-1550439062-cd036594bb0c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image pour Séquence 8">
+                            </div>
+                            <p class="text-gray-700 text-sm text-center">
+                                *Visuel de la séquence 8*
+                            </p>
+                        </div>
+                        <div class="md:w-2/3">
+                            <h4 class="text-2xl font-bold sequence-section-title mb-4">Séquence 8 : Titre de la Séquence 8</h4>
+                            <ul class="list-disc list-inside text-gray-700 space-y-2">
+                                <li><a href="#" class="hover:text-fcd34d">Séance 1 : Sous-thème 1</a></li>
+                                <li><a href="#" class="hover:text-fcd34d">Séance 2 : Sous-thème 2</a></li>
+                                <li><a href="#" class="hover:text-fcd34d font-bold">Synthèse</a></li>
+                            </ul>
+                            <a href="#" class="mt-4 inline-block btn-primary px-4 py-2 rounded-full text-sm font-semibold">
+                                Télécharger la fiche d'activités (PDF)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sequence-item" id="sequence-9">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="md:w-1/3">
+                            <div class="sequence-image-container">
+                                <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image pour Séquence 9">
+                            </div>
+                            <p class="text-gray-700 text-sm text-center">
+                                *Visuel de la séquence 9*
+                            </p>
+                        </div>
+                        <div class="md:w-2/3">
+                            <h4 class="text-2xl font-bold sequence-section-title mb-4">Séquence 9 : Titre de la Séquence 9</h4>
+                            <ul class="list-disc list-inside text-gray-700 space-y-2">
+                                <li><a href="#" class="hover:text-fcd34d">Séance 1 : Sous-thème 1</a></li>
+                                <li><a href="#" class="hover:text-fcd34d">Séance 2 : Sous-thème 2</a></li>
+                                <li><a href="#" class="hover:text-fcd34d font-bold">Synthèse</a></li>
+                            </ul>
+                            <a href="#" class="mt-4 inline-block btn-primary px-4 py-2 rounded-full text-sm font-semibold">
+                                Télécharger la fiche d'activités (PDF)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sequence-item" id="sequence-10">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="md:w-1/3">
+                            <div class="sequence-image-container">
+                                <img src="https://images.unsplash.com/photo-1518770660439-46f797f22b10?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image pour Séquence 10">
+                            </div>
+                            <p class="text-gray-700 text-sm text-center">
+                                *Visuel de la séquence 10*
+                            </p>
+                        </div>
+                        <div class="md:w-2/3">
+                            <h4 class="text-2xl font-bold sequence-section-title mb-4">Séquence 10 : Titre de la Séquence 10</h4>
+                            <ul class="list-disc list-inside text-gray-700 space-y-2">
+                                <li><a href="#" class="hover:text-fcd34d">Séance 1 : Sous-thème 1</a></li>
+                                <li><a href="#" class="hover:text-fcd34d">Séance 2 : Sous-thème 2</a></li>
+                                <li><a href="#" class="hover:text-fcd34d font-bold">Synthèse</a></li>
+                            </ul>
+                            <a href="#" class="mt-4 inline-block btn-primary px-4 py-2 rounded-full text-sm font-semibold">
+                                Télécharger la fiche d'activités (PDF)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-8 text-center text-gray-700">
+        <div class="container mx-auto px-4">
+            <p>© 2025 Techno PONIN - Technologie Collège. Tous droits réservés.</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="index.html#mentions-legales" class="hover:text-fcd34d transition duration-300">Mentions Légales</a>
+                <a href="index.html#plan-du-site" class="hover:text-fcd34d transition duration-300">Plan du Site</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropdowns = document.querySelectorAll('.dropdown');
+
+            dropdowns.forEach(dropdown => {
+                const dropdownToggle = dropdown.querySelector('a'); // Le lien qui déclenche le dropdown
+                const dropdownContent = dropdown.querySelector('.dropdown-content');
+                // Récupère le nom du fichier de la page cible du lien (ex: "5eme.html")
+                const targetPage = dropdownToggle.getAttribute('href').split('/').pop().split('#')[0];
+                // Récupère le nom du fichier de la page actuelle (ex: "index.html" ou "5eme.html")
+                const currentPage = window.location.pathname.split('/').pop().split('#')[0];
+
+                dropdownToggle.addEventListener('click', (e) => {
+                    // Si le lien du dropdown pointe vers la page actuelle
+                    if (targetPage === currentPage) {
+                        e.preventDefault(); // Empêche la navigation par défaut pour gérer le dropdown
+
+                        // Si le dropdown est déjà actif, le ferme
+                        if (dropdown.classList.contains('active')) {
+                            dropdown.classList.remove('active');
+                        } else {
+                            // Ferme tous les autres dropdowns ouverts
+                            document.querySelectorAll('.dropdown.active').forEach(openDropdown => {
+                                if (openDropdown !== dropdown) {
+                                    openDropdown.classList.remove('active');
+                                }
+                            });
+                            // Ouvre le dropdown actuel
+                            dropdown.classList.add('active');
+                        }
+                    }
+                    // Si le lien du dropdown pointe vers une autre page, laisser la navigation par défaut se faire (pas de preventDefault)
+                });
+
+                // Gère les clics à l'intérieur du dropdown pour la navigation (défilement vers l'ancre)
+                dropdownContent.addEventListener('click', (e) => {
+                    // Si c'est un lien d'ancre (commence par #)
+                    if (e.target.tagName === 'A' && e.target.getAttribute('href').includes('#')) {
+                        e.preventDefault(); // Empêche le saut par défaut
+                        const targetId = e.target.getAttribute('href').split('#')[1]; // Récupère l'ID de l'ancre
+                        const targetElement = document.getElementById(targetId);
+                        if (targetElement) {
+                            targetElement.scrollIntoView({
+                                behavior: 'smooth'
+                            });
+                        }
+                        dropdown.classList.remove('active'); // Ferme le dropdown après le défilement
+                    } else if (e.target.tagName === 'A') {
+                        // Si c'est un lien vers une autre page (non ancre), laisser la navigation par défaut
+                        dropdown.classList.remove('active'); // Ferme le dropdown
+                    }
+                });
+            });
+
+            // Ferme les dropdowns si l'on clique en dehors de n'importe quel dropdown
+            document.addEventListener('click', (e) => {
+                dropdowns.forEach(dropdown => {
+                    if (!dropdown.contains(e.target)) {
+                        dropdown.classList.remove('active');
+                    }
+                });
+            });
+
+            // Gère le défilement fluide pour les ancres générales sur la page (qui ne sont pas dans un dropdown)
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                // S'assure que ce gestionnaire ne s'applique pas aux liens déjà gérés par le dropdownContent
+                if (!anchor.closest('.dropdown-content')) {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        document.querySelector(this.getAttribute('href')).scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
