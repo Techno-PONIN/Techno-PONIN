@@ -1,27 +1,573 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Techno PONIN - Accueil</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Techno PONIN - Technologie Collège</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Styles personnalisés pour la police Inter et le thème ensoleillé/réunionnais */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fffbe7; /* Jaune très clair, crème */
+            color: #4a3a00; /* Marron foncé pour la lisibilité sur fond clair */
+        }
+        .hero-section {
+            /* Image d'arrière-plan pour la section héroïque - technologie et ambiance lumineuse */
+            background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .overlay {
+            background-color: rgba(253, 230, 138, 0.7); /* Jaune pastel transparent */
+        }
+        .card {
+            background-color: #ffffff; /* Blanc pur pour les cartes, pour la clarté */
+            color: #4a3a00; /* Marron foncé pour le texte des cartes */
+        }
+        .btn-primary {
+            background-color: #fcd34d; /* Jaune vif et chaleureux */
+            color: #4a3a00; /* Texte marron foncé pour les boutons */
+        }
+        .btn-primary:hover {
+            background-color: #fbbf24; /* Jaune légèrement plus foncé au survol */
+        }
+        /* Ajustements pour les couleurs de texte des titres et liens de navigation */
+        .text-d97706 { /* Orange/doré pour les titres, évoquant le soleil */
+            color: #d97706;
+        }
+        .text-fcd34d { /* Jaune vif au survol des liens */
+            color: #fcd34d;
+        }
+        header {
+            background-color: #fef9c3; /* Jaune clair pour l'en-tête */
+            border-bottom: 2px solid #fcd34d; /* Bordure jaune pour l'en-tête */
+        }
+        footer {
+            background-color: #fefce8; /* Jaune très clair pour le pied de page */
+            border-top: 2px solid #fcd34d; /* Bordure jaune pour le pied de page */
+        }
+
+        /* Styles pour la fenêtre modale */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            color: #4a3a00; /* Texte marron foncé pour le contenu de la modale */
+        }
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #d97706;
+        }
+        .modal-close-btn:hover {
+            color: #fcd34d;
+        }
+        .software-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #fcd34d;
+        }
+        .software-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        /* Styles pour les menus déroulants */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #ffffff;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            top: 100%; /* Positionne le menu sous le bouton */
+            left: 0;
+        }
+        .dropdown-content a {
+            color: #4a3a00;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+        .dropdown-content a:hover {
+            background-color: #fef9c3; /* Jaune clair au survol */
+            color: #d97706; /* Orange/doré au survol */
+        }
+        /* Utilisation de JavaScript pour gérer l'affichage du menu déroulant */
+        .dropdown.active .dropdown-content {
+            display: block;
+        }
+        .dropdown-arrow {
+            margin-left: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+        .dropdown.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+    </style>
 </head>
-<body class="bg-yellow-50 text-gray-800 font-sans min-h-screen flex flex-col items-center justify-center p-6">
-  <header class="text-center mb-12">
-    <h1 class="text-5xl md:text-6xl font-extrabold text-orange-600 mb-4">Bienvenue sur Techno PONIN</h1>
-    <p class="text-lg text-gray-700">Choisissez votre niveau pour accéder aux séquences de technologie</p>
-  </header>
+<body>
+    <header class="py-4 shadow-lg">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center px-4">
+            <h1 class="text-3xl font-bold text-d97706 mb-4 md:mb-0">Techno PONIN</h1>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="index.html" class="text-d97706 hover:text-fcd34d transition duration-300">Accueil</a></li>
+                    
+                    <li class="dropdown" id="dropdown-5eme">
+                        <a href="5eme.html" class="text-d97706 hover:text-fcd34d transition duration-300 inline-flex items-center">
+                            5ème <span class="dropdown-arrow">▼</span>
+                        </a>
+                        <div class="dropdown-content">
+                            <a href="5eme.html#sequence-1">Séquence 1</a>
+                            <a href="5eme.html#sequence-2">Séquence 2</a>
+                            <a href="5eme.html#sequence-3">Séquence 3</a>
+                            <a href="5eme.html#sequence-4">Séquence 4</a>
+                            <a href="5eme.html#sequence-5">Séquence 5</a>
+                            <a href="5eme.html#sequence-6">Séquence 6</a>
+                            <a href="5eme.html#sequence-7">Séquence 7</a>
+                            <a href="5eme.html#sequence-8">Séquence 8</a>
+                            <a href="5eme.html#sequence-9">Séquence 9</a>
+                            <a href="5eme.html#sequence-10">Séquence 10</a>
+                        </div>
+                    </li>
 
-  <main class="space-y-4 text-center">
-    <a href="5ème.html" class="text-xl text-yellow-700 hover:text-orange-600 font-semibold block">📘 5ème</a>
-    <a href="4ème.html" class="text-xl text-yellow-700 hover:text-orange-600 font-semibold block">📗 4ème</a>
-    <a href="3ème.html" class="text-xl text-yellow-700 hover:text-orange-600 font-semibold block">📕 3ème</a>
-  </main>
+                    <li class="dropdown" id="dropdown-4eme">
+                        <a href="4eme.html" class="text-d97706 hover:text-fcd34d transition duration-300 inline-flex items-center">
+                            4ème <span class="dropdown-arrow">▼</span>
+                        </a>
+                        <div class="dropdown-content">
+                            <a href="4eme.html#sequence-1">Séquence 1</a>
+                            <a href="4eme.html#sequence-2">Séquence 2</a>
+                            <a href="4eme.html#sequence-3">Séquence 3</a>
+                            <a href="4eme.html#sequence-4">Séquence 4</a>
+                            <a href="4eme.html#sequence-5">Séquence 5</a>
+                            <a href="4eme.html#sequence-6">Séquence 6</a>
+                            <a href="4eme.html#sequence-7">Séquence 7</a>
+                            <a href="4eme.html#sequence-8">Séquence 8</a>
+                            <a href="4eme.html#sequence-9">Séquence 9</a>
+                            <a href="4eme.html#sequence-10">Séquence 10</a>
+                        </div>
+                    </li>
 
-  <footer class="mt-16 text-sm text-gray-600 text-center">
-    Site pédagogique créé par <strong>G.P.T. – Gilles PONIN Technologie</strong> 🌴 depuis l'île de La Réunion<br />
-    Hébergé avec ❤️ sur GitHub Pages
-  </footer>
+                    <li class="dropdown" id="dropdown-3eme">
+                        <a href="3eme.html" class="text-d97706 hover:text-fcd34d transition duration-300 inline-flex items-center">
+                            3ème <span class="dropdown-arrow">▼</span>
+                        </a>
+                        <div class="dropdown-content">
+                            <a href="3eme.html#sequence-1">Séquence 1</a>
+                            <a href="3eme.html#sequence-2">Séquence 2</a>
+                            <a href="3eme.html#sequence-3">Séquence 3</a>
+                            <a href="3eme.html#sequence-4">Séquence 4</a>
+                            <a href="3eme.html#sequence-5">Séquence 5</a>
+                            <a href="3eme.html#sequence-6">Séquence 6</a>
+                            <a href="3eme.html#sequence-7">Séquence 7</a>
+                            <a href="3eme.html#sequence-8">Séquence 8</a>
+                            <a href="3eme.html#sequence-9">Séquence 9</a>
+                            <a href="3eme.html#sequence-10">Séquence 10</a>
+                        </div>
+                    </li>
+
+                    <li><a href="#ressources" class="text-d97706 hover:text-fcd34d transition duration-300">Ressources</a></li>
+                    <li><a href="#contact" class="text-d97706 hover:text-fcd34d transition duration-300">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="presentation" class="hero-section h-screen flex items-center justify-center text-center relative">
+            <div class="overlay absolute inset-0"></div>
+            <div class="relative z-10 p-8 rounded-lg">
+                <h2 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6">
+                    La Technologie au Collège
+                </h2>
+                <p class="text-xl md:text-2xl text-gray-100 mb-8">
+                    Découvrez les sciences et techniques qui nous entourent, du design à la programmation, au cœur du Cycle 4.
+                </p>
+                <a href="#classes" class="btn-primary px-8 py-4 rounded-full text-lg font-semibold shadow-xl hover:shadow-2xl transition duration-300 transform hover:scale-105">
+                    Explorer les Niveaux
+                </a>
+            </div>
+        </section>
+
+        <section id="classes" class="py-16 bg-fefce8">
+            <div class="container mx-auto px-4">
+                <h3 class="text-4xl font-bold text-d97706 text-center mb-12">Nos Niveaux d'Enseignement - Cycle 4</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="card rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition duration-300">
+                        <img src="https://images.unsplash.com/photo-1550439062-cd036594bb0c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image représentant la 5ème" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="text-2xl font-bold text-d97706 mb-2">5ème : Matériaux, Énergie & Flux</h4>
+                            <p class="text-gray-700 text-sm">
+                                Explorez nos 10 séquences dédiées à l'étude des matériaux, des sources et conversions d'énergie, ainsi qu'aux chaînes d'information et d'énergie dans les systèmes techniques.
+                            </p>
+                            <a href="5eme.html" class="mt-4 inline-block btn-primary px-5 py-2 rounded-full text-sm font-semibold">
+                                Découvrir les Séquences
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition duration-300">
+                        <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image représentant la 4ème" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="text-2xl font-bold text-d97706 mb-2">4ème : Informatique, Réseaux & Modélisation</h4>
+                            <p class="text-gray-700 text-sm">
+                                Accédez à nos 10 séquences pour approfondir la programmation (algorithmes), les réseaux informatiques, les objets connectés et la modélisation du comportement des systèmes.
+                            </p>
+                            <a href="4eme.html" class="mt-4 inline-block btn-primary px-5 py-2 rounded-full text-sm font-semibold">
+                                Découvrir les Séquences
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition duration-300">
+                        <img src="https://images.unsplash.com/photo-1518770660439-46f797f22b10?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image représentant la 3ème" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="text-2xl font-bold text-d97706 mb-2">3ème : Innovation, Projet & Société</h4>
+                            <p class="text-gray-700 text-sm">
+                                Parcourez nos 10 séquences pour la conduite de projets technologiques complexes, l'analyse de l'impact de la technologie sur la société et la préparation à l'orientation post-collège.
+                            </p>
+                            <a href="3eme.html" class="mt-4 inline-block btn-primary px-5 py-2 rounded-full text-sm font-semibold">
+                                Découvrir les Séquences
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ressources" class="py-16 bg-fefce8">
+            <div class="container mx-auto px-4">
+                <h3 class="text-4xl font-bold text-d97706 text-center mb-12">Ressources Pédagogiques</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="card rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition duration-300">
+                        <img src="https://images.unsplash.com/photo-1587440871875-191322ee64b0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image de fiches méthodes" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="text-2xl font-bold text-d97706 mb-2">Fiches Méthodes</h4>
+                            <p class="text-gray-700 text-sm">
+                                Des fiches pratiques pour vous aider à maîtriser les concepts clés et les démarches en technologie.
+                            </p>
+                            <a href="#" class="mt-4 inline-block btn-primary px-5 py-2 rounded-full text-sm font-semibold">
+                                Accéder
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition duration-300">
+                        <img src="https://images.unsplash.com/photo-1517030310246-9d584310508a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image de logiciels de technologie" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="text-2xl font-bold text-d97706 mb-2">Logiciels de Technologie</h4>
+                            <p class="text-gray-700 text-sm">
+                                Retrouvez ici les liens de téléchargement et les informations sur les logiciels utilisés en classe (CAO, simulation, programmation).
+                            </p>
+                            <button id="openSoftwareModal" class="mt-4 inline-block btn-primary px-5 py-2 rounded-full text-sm font-semibold">
+                                Télécharger & Infos
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition duration-300">
+                        <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image de tutoriels vidéo" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="text-2xl font-bold text-d97706 mb-2">Tutoriels Vidéo</h4>
+                            <p class="text-gray-700 text-sm">
+                                Des vidéos explicatives pour comprendre les notions complexes et les manipulations techniques.
+                            </p>
+                            <a href="#" class="mt-4 inline-block btn-primary px-5 py-2 rounded-full text-sm font-semibold">
+                                Visionner
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition duration-300">
+                        <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image de lien Pronote" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="text-2xl font-bold text-d97706 mb-2">Accès Pronote Collège</h4>
+                            <p class="text-700 text-sm">
+                                Accédez directement à votre espace Pronote pour consulter notes, devoirs et informations importantes.
+                            </p>
+                            <a href="#" class="mt-4 inline-block btn-primary px-5 py-2 rounded-full text-sm font-semibold">
+                                Accéder à Pronote
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-16 bg-fff7ed">
+            <div class="container mx-auto px-4 text-center">
+                <h3 class="text-4xl font-bold text-d97706 mb-8">Contactez-nous</h3>
+                <p class="text-gray-700 mb-8 max-w-2xl mx-auto">
+                    Pour toute question concernant la matière Technologie, les projets ou les ressources, n'hésitez pas à nous contacter.
+                </p>
+                <form class="max-w-xl mx-auto space-y-6">
+                    <div>
+                        <input type="text" placeholder="Votre Nom" class="w-full p-3 rounded-lg bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-fcd34d">
+                    </div>
+                    <div>
+                        <input type="email" placeholder="Votre Email" class="w-full p-3 rounded-lg bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-fcd34d">
+                    </div>
+                    <div>
+                        <textarea placeholder="Votre Message" rows="6" class="w-full p-3 rounded-lg bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-fcd34d"></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary px-8 py-3 rounded-full text-lg font-semibold shadow-xl hover:shadow-2xl transition duration-300 transform hover:scale-105">
+                        Envoyer le Message
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-8 text-center text-gray-700">
+        <div class="container mx-auto px-4">
+            <p>© 2025 Techno PONIN - Technologie Collège. Tous droits réservés.</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="#" class="hover:text-fcd34d transition duration-300">Mentions Légales</a>
+                <a href="#" class="hover:text-fcd34d transition duration-300">Plan du Site</a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="softwareModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn" id="closeSoftwareModal">×</button>
+            <h3 class="text-3xl font-bold text-d97706 mb-6 text-center">Logiciels Gratuits pour la Technologie</h3>
+
+            <div class="software-section">
+                <h4 class="text-2xl font-bold text-d97706 mb-2">1. Scratch (Programmation Visuelle)</h4>
+                <p class="mb-2">
+                    Scratch est un langage de programmation visuel et une plateforme en ligne qui permet aux élèves de créer des histoires interactives, des jeux et des animations. Idéal pour débuter la logique de programmation.
+                </p>
+                <p class="mb-4">
+                    <a href="https://scratch.mit.edu/download" target="_blank" class="text-fcd34d hover:underline font-semibold">Télécharger Scratch Desktop</a> ou <a href="https://scratch.mit.edu/projects/editor/" target="_blank" class="text-fcd34d hover:underline font-semibold">Utiliser en ligne</a>
+                </p>
+                <h5 class="font-bold mb-1">Installation (version Desktop) :</h5>
+                <ul class="list-disc list-inside mb-4 text-sm">
+                    <li>Rendez-vous sur le lien de téléchargement ci-dessus.</li>
+                    <li>Choisissez la version correspondant à votre système d'exploitation (Windows, macOS, ChromeOS, Android).</li>
+                    <li>Téléchargez le fichier d'installation et suivez les instructions à l'écran.</li>
+                    <li>Une fois installé, lancez l'application.</li>
+                </ul>
+                <h5 class="font-bold mb-1">Utilisation :</h5>
+                <ul class="list-disc list-inside text-sm">
+                    <li>**Version en ligne :** Accédez directement à l'éditeur via le lien "Utiliser en ligne". Vous pouvez créer un compte pour sauvegarder vos projets.</li>
+                    <li>**Version Desktop :** Lancez l'application installée. L'interface est intuitive, glissez-déposez des blocs de code pour créer vos programmes.</li>
+                    <li>Pour commencer, explorez les tutoriels intégrés ou les exemples de projets.</li>
+                </ul>
+            </div>
+
+            <div class="software-section">
+                <h4 class="text-2xl font-bold text-d97706 mb-2">2. Tinkercad (Conception 3D & Électronique)</h4>
+                <p class="mb-2">
+                    Tinkercad est un outil en ligne gratuit et facile à utiliser pour la conception 3D, l'électronique (simulation de circuits Arduino) et la programmation de blocs. Parfait pour les projets de modélisation et de prototypage.
+                </p>
+                <p class="mb-4">
+                    <a href="https://www.tinkercad.com/" target="_blank" class="text-fcd34d hover:underline font-semibold">Accéder à Tinkercad (en ligne)</a>
+                </p>
+                <h5 class="font-bold mb-1">Installation :</h5>
+                <ul class="list-disc list-inside mb-4 text-sm">
+                    <li>Aucune installation n'est nécessaire, c'est un outil entièrement en ligne.</li>
+                    <li>Assurez-vous d'avoir une connexion internet stable et un navigateur web à jour (Chrome, Firefox, Edge...).</li>
+                </ul>
+                <h5 class="font-bold mb-1">Utilisation :</h5>
+                <ul class="list-disc list-inside text-sm">
+                    <li>Créez un compte gratuit (ou connectez-vous avec un compte Google/Autodesk).</li>
+                    <li>Choisissez entre la conception 3D (pour créer des objets à imprimer en 3D) ou les circuits (pour simuler des montages électroniques avec Arduino).</li>
+                    <li>L'interface est basée sur le glisser-déposer, très intuitive pour les débutants. Des tutoriels sont disponibles directement sur le site.</li>
+                </ul>
+            </div>
+
+            <div class="software-section">
+                <h4 class="text-2xl font-bold text-d97706 mb-2">3. mBlock (Programmation de Robots)</h4>
+                <p class="mb-2">
+                    mBlock est un environnement de programmation graphique basé sur Scratch, spécialement conçu pour programmer des robots éducatifs comme le mBot, mais aussi des cartes Arduino et d'autres dispositifs.
+                </p>
+                <p class="mb-4">
+                    <a href="https://www.mblock.cc/en-us/download/" target="_blank" class="text-fcd34d hover:underline font-semibold">Télécharger mBlock Desktop</a> ou <a href="https://ide.mblock.cc/" target="_blank" class="text-fcd34d hover:underline font-semibold">Utiliser mBlock en ligne</a>
+                </p>
+                <h5 class="font-bold mb-1">Installation (version Desktop) :</h5>
+                <ul class="list-disc list-inside mb-4 text-sm">
+                    <li>Rendez-vous sur la page de téléchargement de mBlock.</li>
+                    <li>Sélectionnez la version pour votre système d'exploitation (Windows, macOS, Linux).</li>
+                    <li>Téléchargez le fichier d'installation et suivez les étapes pour l'installer sur votre ordinateur.</li>
+                </ul>
+                <h5 class="font-bold mb-1">Utilisation :</h5>
+                <ul class="list-disc list-inside text-sm">
+                    <li>**Version en ligne :** Accédez à l'éditeur via le lien "Utiliser mBlock en ligne".</li>
+                    <li>**Version Desktop :** Lancez l'application. Vous pouvez connecter votre robot mBot (ou autre) via USB ou Bluetooth.</li>
+                    <li>Utilisez les blocs de code pour contrôler les mouvements du robot, les capteurs et les actionneurs.</li>
+                </ul>
+            </div>
+
+            <div class="software-section">
+                <h4 class="text-2xl font-bold text-d97706 mb-2">4. Sweet Home 3D (Aménagement Intérieur 2D/3D)</h4>
+                <p class="mb-2">
+                    Sweet Home 3D est un logiciel gratuit d'aménagement intérieur qui vous aide à dessiner le plan de votre maison en 2D, puis à l'aménager avec des meubles et à visiter le résultat en 3D. Idéal pour des projets liés à l'habitat et à l'ergonomie.
+                </p>
+                <p class="mb-4">
+                    <a href="http://www.sweethome3d.com/fr/download.jsp" target="_blank" class="text-fcd34d hover:underline font-semibold">Télécharger Sweet Home 3D</a>
+                </p>
+                <h5 class="font-bold mb-1">Installation :</h5>
+                <ul class="list-disc list-inside mb-4 text-sm">
+                    <li>Rendez-vous sur la page de téléchargement officielle.</li>
+                    <li>Choisissez la version adaptée à votre système d'exploitation (Windows, macOS, Linux).</li>
+                    <li>Téléchargez et exécutez le programme d'installation en suivant les instructions.</li>
+                </ul>
+                <h5 class="font-bold mb-1">Utilisation :</h5>
+                <ul class="list-disc list-inside text-sm">
+                    <li>Lancez Sweet Home 3D. Vous pouvez dessiner les murs de votre pièce ou de votre maison en 2D.</li>
+                    <li>Ajoutez des portes, des fenêtres et des meubles depuis la bibliothèque intégrée.</li>
+                    <li>La vue 3D se met à jour en temps réel, vous permettant de visualiser votre aménagement.</li>
+                </ul>
+            </div>
+
+            <div class="software-section">
+                <h4 class="text-2xl font-bold text-d97706 mb-2">5. LibreOffice (Suite Bureautique Gratuite)</h4>
+                <p class="mb-2">
+                    LibreOffice est une suite bureautique complète et gratuite, alternative à Microsoft Office. Elle inclut un traitement de texte (Writer), un tableur (Calc), un logiciel de présentation (Impress) et d'autres outils, essentiels pour la rédaction de rapports, la création de tableaux ou de présentations.
+                </p>
+                <p class="mb-4">
+                    <a href="https://fr.libreoffice.org/telecharger/" target="_blank" class="text-fcd34d hover:underline font-semibold">Télécharger LibreOffice</a>
+                </p>
+                <h5 class="font-bold mb-1">Installation :</h5>
+                <ul class="list-disc list-inside mb-4 text-sm">
+                    <li>Visitez le site officiel de LibreOffice et cliquez sur le bouton de téléchargement.</li>
+                    <li>Choisissez la version pour votre système d'exploitation (Windows, macOS, Linux).</li>
+                    <li>Téléchargez le fichier d'installation et suivez les instructions pour l'installer sur votre ordinateur.</li>
+                </ul>
+                <h5 class="font-bold mb-1">Utilisation :</h5>
+                <ul class="list-disc list-inside text-sm">
+                    <li>Après l'installation, vous trouverez les différentes applications (Writer, Calc, Impress...) dans votre menu Démarrer ou Applications.</li>
+                    <li>Utilisez Writer pour rédiger vos documents, Calc pour créer des tableaux et faire des calculs, et Impress pour vos présentations orales.</li>
+                    <li>L'interface est similaire à d'autres suites bureautiques, facilitant la prise en main.</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const openSoftwareModalBtn = document.getElementById('openSoftwareModal');
+        const softwareModal = document.getElementById('softwareModal');
+        const closeSoftwareModalBtn = document.getElementById('closeSoftwareModal');
+
+        // Fonction pour ouvrir la modale
+        openSoftwareModalBtn.addEventListener('click', () => {
+            softwareModal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Empêche le défilement du corps
+        });
+
+        // Fonction pour fermer la modale
+        closeSoftwareModalBtn.addEventListener('click', () => {
+            softwareModal.classList.remove('active');
+            document.body.style.overflow = ''; // Rétablit le défilement du corps
+        });
+
+        // Fermer la modale en cliquant en dehors
+        softwareModal.addEventListener('click', (event) => {
+            if (event.target === softwareModal) {
+                softwareModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropdowns = document.querySelectorAll('.dropdown');
+
+            dropdowns.forEach(dropdown => {
+                const dropdownToggle = dropdown.querySelector('a'); // Le lien qui déclenche le dropdown
+                const dropdownContent = dropdown.querySelector('.dropdown-content');
+
+                // Empêche le comportement par défaut du lien pour le clic simple
+                dropdownToggle.addEventListener('click', (e) => {
+                    // Si le clic est sur le lien principal du dropdown (5ème, 4ème, 3ème)
+                    // et que le menu déroulant est déjà ouvert, on le ferme.
+                    // Sinon, on ouvre le menu déroulant.
+                    if (dropdown.classList.contains('active')) {
+                        e.preventDefault(); // Empêche la navigation vers 5eme.html, 4eme.html, etc.
+                        dropdown.classList.remove('active');
+                    } else {
+                        // Ferme tous les autres dropdowns ouverts
+                        document.querySelectorAll('.dropdown.active').forEach(openDropdown => {
+                            if (openDropdown !== dropdown) {
+                                openDropdown.classList.remove('active');
+                            }
+                        });
+                        dropdown.classList.add('active');
+                        e.preventDefault(); // Empêche la navigation immédiate
+                    }
+                });
+
+                // Gère les clics à l'intérieur du dropdown pour la navigation
+                dropdownContent.addEventListener('click', (e) => {
+                    // Si un lien de séquence est cliqué, on navigue et on ferme le dropdown
+                    if (e.target.tagName === 'A') {
+                        dropdown.classList.remove('active'); // Ferme le dropdown après le clic
+                    }
+                });
+            });
+
+            // Fermer les dropdowns si l'on clique en dehors
+            document.addEventListener('click', (e) => {
+                dropdowns.forEach(dropdown => {
+                    if (!dropdown.contains(e.target)) {
+                        dropdown.classList.remove('active');
+                    }
+                });
+            });
+
+            // Gérer le défilement fluide vers les ancres
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
 </body>
 </html>
